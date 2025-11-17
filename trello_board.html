@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadro Trello - Sistema de Barbearia (Sprint 1 Concluída)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .board-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .board-header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .board-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .board {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+        
+        .column {
+            background: #ebecf0;
+            border-radius: 8px;
+            min-width: 280px;
+            max-width: 280px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .column-header {
+            font-weight: 600;
+            font-size: 14px;
+            color: #172b4d;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #fff;
+            border-radius: 4px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: #172b4d;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .card-labels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .label {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .label-high { background: #eb5a46; }
+        .label-medium { background: #f2d600; color: #333; }
+        .label-low { background: #61bd4f; }
+        .label-bug { background: #c377e0; }
+        .label-critical { background: #000; }
+        .label-feature { background: #00c2e0; }
+        .label-sprint { background: #ff9f1a; }
+        .label-ux { background: #0079bf; }
+        
+        .card-meta {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #5e6c84;
+        }
+        
+        .card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #5e6c84;
+            padding: 20px;
+            font-size: 12px;
+            font-style: italic;
+        }
+        
+        .checklist-progress {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #5e6c84;
+        }
+        
+        .progress-bar {
+            width: 40px;
+            height: 6px;
+            background: #dfe1e6;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #61bd4f;
+        }
+        
+        .improvement-card {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .completed-card {
+            border-left: 4px solid #61bd4f;
+        }
+        
+        .stats {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .stat-item {
+            background: #f4f5f7;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #5e6c84;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #172b4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="board-header">
+        <h1>🔧 Sistema de Agendamento para Barbearia - Sprint 1 Concluída ✅</h1>
+        <p>Quadro Scrum demonstrando workflow completo com Code Review implementado após Retrospectiva</p>
+    </div>
+    
+    <div class="board">
+        <!-- Column 1: Product Backlog -->
+        <div class="column">
+            <div class="column-header">📋 Product Backlog (10)</div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-high">Alta</span>
+                </div>
+                <div class="card-title">[Cliente] Notificação de confirmação após agendar</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-medium">Média</span>
+                </div>
+                <div class="card-title">[Barbeiro] Ver minha agenda do dia/semana</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-medium">Média</span>
+                </div>
+                <div class="card-title">[Cliente] Cancelar ou reagendar horário</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-high">Alta ⬆️</span>
+                </div>
+                <div class="card-title">[Barbeiro] Bloquear horários (ex: almoço)</div>
+                <div class="card-meta">
+                    <span>📝 Prioridade aumentou após Sprint Review</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-high">Alta</span>
+                </div>
+                <div class="card-title">[Barbeiro] Registrar cada serviço prestado</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-medium">Média</span>
+                </div>
+                <div class="card-title">[Dono] Ver relatório de faturamento</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-low">Baixa</span>
+                </div>
+                <div class="card-title">[Dono] Registrar despesas simples</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-high">Alta</span>
+                </div>
+                <div class="card-title">[Cliente] Fazer cadastro/login simples</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-medium">Média</span>
+                </div>
+                <div class="card-title">[Dono] Cadastro dos meus clientes</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-labels">
+                    <span class="label label-medium">Média</span>
+                </div>
+                <div class="card-title">[Dono] Cadastrar barbeiros da equipe</div>
+            </div>
+        </div>
+        
+        <!-- Column 2: Sprint 1 Backlog -->
+        <div class="column">
+            <div class="column-header">🎯 Sprint 1 Backlog (0)</div>
+            <div class="empty">Sprint concluída! 🎉<br>Todos os cartões foram movidos</div>
+        </div>
+        
+        <!-- Column 3: Em Progresso -->
+        <div class="column">
+            <div class="column-header">🔄 Em Progresso (0)</div>
+            <div class="empty">Nenhum trabalho em andamento</div>
+        </div>
+        
+        <!-- Column 4: Revisão de Código -->
+        <div class="column">
+            <div class="column-header">👁️ Revisão de Código (0)</div>
+            <div class="empty">⭐ Nova coluna!<br>Melhoria da Retrospectiva</div>
+        </div>
+        
+        <!-- Column 5: Teste -->
+        <div class="column">
+            <div class="column-header">🧪 Teste (0)</div>
+            <div class="empty">Nenhum cartão em teste</div>
+        </div>
+        
+        <!-- Column 6: Concluído Sprint 1 -->
+        <div class="column">
+            <div class="column-header">✅ Concluído Sprint 1 (5)</div>
+            
+            <div class="card completed-card">
+                <div class="card-labels">
+                    <span class="label label-feature">Feature</span>
+                    <span class="label label-ux">UX/UI</span>
+                    <span class="label label-sprint">Sprint 1</span>
+                    <span class="label label-high">Alta</span>
+                </div>
+                <div class="card-title">[Cliente] Ver horários disponíveis de barbeiro</div>
+                <div class="card-meta">
+                    <div class="checklist-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span>6/6 ✓</span>
+                    </div>
+                    <span>💬 4</span>
+                </div>
+            </div>
+            
+            <div class="card completed-card">
+                <div class="card-labels">
+                    <span class="label label-feature">Feature</span>
+                    <span class="label label-sprint">Sprint 1</span>
+                    <span class="label label-high">Alta</span>
+                </div>
+                <div class="card-title">[Cliente] Notificação de confirmação</div>
+                <div class="card-meta">
+                    <span>✓ Concluído</span>
+                </div>
+            </div>
+            
+            <div class="card completed-card">
+                <div class="card-labels">
+                    <span class="label label-feature">Feature</span>
+                    <span class="label label-sprint">Sprint 1</span>
+                    <span class="label label-high">Alta</span>
+                </div>
+                <div class="card-title">[Barbeiro] Registrar serviços prestados</div>
+                <div class="card-meta">
+                    <span>✓ Concluído</span>
+                </div>
+            </div>
+            
+            <div class="card completed-card">
+                <div class="card-labels">
+                    <span class="label label-feature">Feature</span>
+                    <span class="label label-sprint">Sprint 1</span>
+                    <span class="label label-high">Alta</span>
+                </div>
+                <div class="card-title">[Cliente] Cadastro/Login simples</div>
+                <div class="card-meta">
+                    <span>✓ Concluído</span>
+                </div>
+            </div>
+            
+            <div class="card completed-card">
+                <div class="card-labels">
+                    <span class="label label-bug">BUG</span>
+                    <span class="label label-critical">Crítico</span>
+                    <span class="label label-sprint">Sprint 1</span>
+                </div>
+                <div class="card-title">🐛 Usuários não conseguem resetar senha</div>
+                <div class="card-meta">
+                    <div class="checklist-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span>5/5 ✓</span>
+                    </div>
+                    <span>💬 3</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Column 7: Melhorias da Retrospectiva -->
+        <div class="column">
+            <div class="column-header">🎯 Melhorias da Retrospectiva (1)</div>
+            
+            <div class="card improvement-card">
+                <div class="card-title">⚡ [AÇÃO] Implementar Code Review Obrigatório</div>
+                <div style="font-size: 11px; color: #5e6c84; margin-top: 8px; line-height: 1.4;">
+                    <strong>Decisão:</strong> Criar coluna de "Revisão de Código" e exigir aprovação antes de teste.
+                </div>
+                <div class="card-meta" style="margin-top: 10px;">
+                    <div class="checklist-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <span>3/4 ✓</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stats">
+        <h3>📊 Métricas da Sprint 1</h3>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-label">Velocity</div>
+                <div class="stat-value">21</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Taxa de Conclusão</div>
+                <div class="stat-value">84%</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Cartões Concluídos</div>
+                <div class="stat-value">5</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Bugs Resolvidos</div>
+                <div class="stat-value">1</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Product Backlog</div>
+                <div class="stat-value">10</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Code Reviews</div>
+                <div class="stat-value">✓ Novo</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
